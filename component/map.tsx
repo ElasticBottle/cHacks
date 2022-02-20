@@ -20,6 +20,13 @@ function Map({
       position: { lat: center.lat, lng: center.lng },
       map,
       title: "Home",
+      animation: google.maps.Animation.DROP,
+      icon: {
+        path: google.maps.SymbolPath.CIRCLE,
+        scale: 5,
+        fillColor: 'blue',
+        fillOpacity: 1.0,
+      },
     });
     setGmap(map);
   }, [center.lat, center.lng]);
@@ -39,6 +46,7 @@ function Map({
         },
         map: gmap,
         title: location.location,
+        animation: google.maps.Animation.DROP,
       });
     }
   }, [gmap, userLocations]);
