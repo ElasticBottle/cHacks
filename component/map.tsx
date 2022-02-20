@@ -1,13 +1,14 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 function Map({
   center,
-  zoom,
+  userLocations,
 }: {
   center: google.maps.LatLngLiteral;
-  zoom: number;
+  userLocations: any;
 }) {
   const ref = useRef() as React.MutableRefObject<HTMLDivElement>;
+  const [gmap, setGmap] = useState<google.maps.Map | undefined>(undefined);
 
   useEffect(() => {
     const home = { lat: center.lat, lng: center.lng };
@@ -20,14 +21,27 @@ function Map({
       map,
       title: "Home",
     });
+    setGmap(map);
+  }, [center.lat, center.lng]);
+  useEffect(() => {
+    if (!userLocations || !gmap) {
+      return;
+    }
+    for (let location of userLocations) {
+      const result: string[] = location.location.split(",");
 
-    /* new google.maps.Marker({
-      position: { lat: -20, lng: 120 },
-      map,
-      title: "Marker 2",
-    }); */
-  }), [];
-
+      const long = parseFloat(result[0].substring(1));
+      const lat = parseFloat(result[1].slice(0, -1));
+      new google.maps.Marker({
+        position: {
+          lng: long,
+          lat: lat,
+        },
+        map: gmap,
+        title: location.location,
+      });
+    }
+  }, [gmap, userLocations]);
   return (
     <div
       style={{ height: "calc(100vh - 56px)", width: "100vw" }}
@@ -37,4 +51,4 @@ function Map({
   );
 }
 
-export default Map;
+export default React.memo(Map);
