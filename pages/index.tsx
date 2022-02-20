@@ -8,13 +8,6 @@ import { ReactElement } from "react";
 import { isLatLngLiteral } from "@googlemaps/typescript-guards";
 import React from "react";
 
-void addMarker(lat, lng) => () {
-  const posn = React.useState<google.maps.LatLngLiteral>({
-    lat: lat,
-    lng: lng,
-  });
-  <Marker key={i} position={ } />
-}
 const Marker: React.FC<google.maps.MarkerOptions> = (options) => {
   const [marker, setMarker] = React.useState<google.maps.Marker>();
 
