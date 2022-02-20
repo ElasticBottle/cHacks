@@ -5,14 +5,60 @@ import styles from "../styles/Home.module.css";
 import Map from "../component/map"
 import { Wrapper, Status } from "@googlemaps/react-wrapper";
 import { ReactElement } from "react";
+import { isLatLngLiteral } from "@googlemaps/typescript-guards";
+import React from "react";
 
-const render = (status: Status): ReactElement => {
-  if (status === Status.FAILURE) return <div>Error</div>;
-  return <div>Loading</div> ;
+void addMarker(lat, lng) => () {
+  const posn = React.useState<google.maps.LatLngLiteral>({
+    lat: lat,
+    lng: lng,
+  });
+  <Marker key={i} position={ } />
+}
+const Marker: React.FC<google.maps.MarkerOptions> = (options) => {
+  const [marker, setMarker] = React.useState<google.maps.Marker>();
+
+  React.useEffect(() => {
+    if (!marker) {
+      setMarker(new google.maps.Marker());
+    }
+
+    // remove marker from map on unmount
+    return () => {
+      if (marker) {
+        marker.setMap(null);
+      }
+    };
+  }, [marker]);
+
+  React.useEffect(() => {
+    if (marker) {
+      marker.setOptions(options);
+    }
+  }, [marker, options]);
+
+  return null;
 };
 
 
 const Home: NextPage = () => {
+  const [clicks, setClicks] = React.useState<google.maps.LatLng[]>([]);
+  const [zoom, setZoom] = React.useState(3); // initial zoom
+  const [center, setCenter] = React.useState<google.maps.LatLngLiteral>({
+    lat: 0,
+    lng: 0,
+  });
+
+  const onClick = (e: google.maps.MapMouseEvent) => {
+    // avoid directly mutating state
+    setClicks([...clicks, e.latLng!]);
+  };
+
+  const onIdle = (m: google.maps.Map) => {
+    console.log("onIdle");
+    setZoom(m.getZoom()!);
+    setCenter(m.getCenter()!.toJSON());
+  };
   return (
     <div className={styles.container}>
       <Head>
@@ -21,11 +67,21 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className={styles.main}>
-        
+      <main style={{ height: 1000 }}>
+
         <Wrapper apiKey={"AIzaSyCCjVW2VkxkLyrc2Jp-7BxQMeO3wMDNWrQ"}>
-    <Map zoom ={2} center={{lat:10, lng: 10}}/>
-  </Wrapper>
+          <Map
+            center={center}
+            onClick={onClick}
+            onIdle={onIdle}
+            zoom={zoom}
+            style={{ flexGrow: "1", height: "100%" }}
+          >
+            {clicks.map((latLng, i) => (
+              <Marker key={i} position={latLng} />
+            ))}
+          </Map>
+        </Wrapper>
       </main>
 
       <footer className={styles.footer}>
@@ -40,7 +96,7 @@ const Home: NextPage = () => {
           </span>
         </a>
       </footer>
-    </div>
+    </div >
   );
 };
 
