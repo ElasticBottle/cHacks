@@ -1,6 +1,5 @@
 import React from "react";
-import styles from "../styles/Home.module.css";
-import useDeepCompareEffectForMaps from 'use-deep-compare-effect'
+import useDeepCompareEffectForMaps from "use-deep-compare-effect";
 
 interface MapProps extends google.maps.MapOptions {
   style: { [key: string]: string };
@@ -60,6 +59,5 @@ const Map: React.FC<MapProps> = ({
     </>
   );
 };
-
 
 export default Map;

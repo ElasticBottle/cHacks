@@ -1,7 +1,8 @@
 import { MantineProvider } from "@mantine/core";
 import { SessionProvider } from "next-auth/react";
 import Head from "next/head";
-import { createClient, Provider } from "urql";
+import { Provider } from "urql";
+import { client } from "../atoms/data";
 import { AppPropsWithLayout } from "../interface/next";
 import "../styles/globals.css";
 
@@ -9,10 +10,6 @@ export default function App({
   Component,
   pageProps: { session, ...pageProps },
 }: AppPropsWithLayout) {
-  const client = createClient({
-    url: "http://hot-or-not-hasura.caprover.curdinc.com/v1/graphql",
-  });
-
   const layout = Component.getLayout ?? ((page) => page);
 
   return (

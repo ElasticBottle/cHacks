@@ -12,6 +12,7 @@ const Home = ({ loggedIn }: { loggedIn: boolean }) => {
         onClick={() => {
           if (loggedIn) {
             window.location.href = ROUTE_MAP;
+            return;
           }
           signIn();
         }}
