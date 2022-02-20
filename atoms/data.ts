@@ -1,6 +1,6 @@
 import { createClient } from "urql";
 export const client = createClient({
-  url: "http://hot-or-not-hasura.caprover.curdinc.com/v1/graphql",
+  url: "https://hot-or-not-hasura.caprover.curdinc.com/v1/graphql",
 });
 
 export const userQuery = `
