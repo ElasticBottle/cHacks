@@ -10,23 +10,23 @@ function Map({
   const ref = useRef() as React.MutableRefObject<HTMLDivElement>;
 
   useEffect(() => {
-    const uluru = { lat: -25.344, lng: 131.036 };
+    const home = { lat: center.lat, lng: center.lng };
     const map = new window.google.maps.Map(ref.current, {
-      center: uluru,
-      zoom: 6,
+      center: home,
+      zoom: 17,
     });
     new google.maps.Marker({
-      position: { lat: -25.344, lng: 131.036 },
+      position: { lat: center.lat, lng: center.lng },
       map,
-      title: "Hello World!",
+      title: "Home",
     });
 
-    new google.maps.Marker({
+    /* new google.maps.Marker({
       position: { lat: -20, lng: 120 },
       map,
       title: "Marker 2",
-    });
-  });
+    }); */
+  }), [];
 
   return (
     <div
