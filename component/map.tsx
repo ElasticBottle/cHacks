@@ -1,65 +1,39 @@
+import { useRef, useEffect } from "react";
 import React from "react";
-import styles from "../styles/Home.module.css";
-import useDeepCompareEffectForMaps from 'use-deep-compare-effect'
+import GoogleMapReact from "google-map-react";
+import { GoogleMap, Marker } from "react-google-maps"
 
-interface MapProps extends google.maps.MapOptions {
-  style: { [key: string]: string };
-  onClick?: (e: google.maps.MapMouseEvent) => void;
-  onIdle?: (map: google.maps.Map) => void;
+function Map({
+  center,
+  zoom,
+}: {
+  center: google.maps.LatLngLiteral;
+  zoom: number;
+}) {
+  const ref = useRef() as React.MutableRefObject<HTMLDivElement>;
+
+  useEffect(() => {
+    const uluru = { lat: -25.344, lng: 131.036 };
+    const map = new window.google.maps.Map(ref.current, {
+      center: uluru,
+      zoom: 6,
+    });
+    new google.maps.Marker({
+      position: { lat: -25.344, lng: 131.036 },
+      map,
+      title: "Hello World!",
+    });
+
+    new google.maps.Marker({
+      position: { lat: -20, lng: 120 },
+      map,
+      title: "Marker 2",
+    });
+
+
+  });
+
+  return <div style={{ height: '80vh', width: '80vw' }} ref={ref} id="map" />;
 }
-
-const Map: React.FC<MapProps> = ({
-  onClick,
-  onIdle,
-  children,
-  style,
-  ...options
-}) => {
-  const ref = React.useRef<HTMLDivElement>(null);
-  const [map, setMap] = React.useState<google.maps.Map>();
-
-  React.useEffect(() => {
-    if (ref.current && !map) {
-      setMap(new window.google.maps.Map(ref.current, {}));
-    }
-  }, [ref, map]);
-
-  // because React does not do deep comparisons, a custom hook is used
-  // see discussion in https://github.com/googlemaps/js-samples/issues/946
-  useDeepCompareEffectForMaps(() => {
-    if (map) {
-      map.setOptions(options);
-    }
-  }, [map, options]);
-
-  React.useEffect(() => {
-    if (map) {
-      ["click", "idle"].forEach((eventName) =>
-        google.maps.event.clearListeners(map, eventName)
-      );
-
-      if (onClick) {
-        map.addListener("click", onClick);
-      }
-
-      if (onIdle) {
-        map.addListener("idle", () => onIdle(map));
-      }
-    }
-  }, [map, onClick, onIdle]);
-
-  return (
-    <>
-      <div ref={ref} style={style} />
-      {React.Children.map(children, (child) => {
-        if (React.isValidElement(child)) {
-          // set the map prop on the child component
-          return React.cloneElement(child, { map });
-        }
-      })}
-    </>
-  );
-};
-
 
 export default Map;
