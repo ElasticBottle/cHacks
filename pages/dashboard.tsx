@@ -2,7 +2,7 @@ import { Wrapper } from "@googlemaps/react-wrapper";
 import { Button } from "@mantine/core";
 import { GetServerSideProps } from "next";
 import { getSession, useSession } from "next-auth/react";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useMutation, useQuery } from "urql";
 import { userMutation, userQuery } from "../atoms/data";
 import Map from "../component/map";
@@ -13,7 +13,8 @@ import { Switch } from '@mantine/core';
 
 function Dashboard() {
   const { data: session } = useSession();
-
+  const [lati, setlati] = useState(0)
+  const [long, setlong] = useState(0)
   const [mutationResult, updateUser] = useMutation(userMutation);
   const [{ data, fetching, error }, reexecuteQuery] = useQuery({
     query: userQuery,
@@ -51,9 +52,13 @@ function Dashboard() {
 
   useEffect(() => {
     const location = window.navigator && window.navigator.geolocation;
+    console.log(1);
     if (location) {
       location.getCurrentPosition(
         (position) => {
+          setlati(position.coords.latitude)
+          setlong(position.coords.longitude)
+          console.log(position)
           return position;
         },
         (error) => {
@@ -65,11 +70,11 @@ function Dashboard() {
 
   if (fetching) return <p>Loading...</p>;
   if (error) return <p>Oh no... {error.message}</p>;
-
+console.log(lati, long)
   return (
     <div className="relative h-full w-full">
       <Wrapper apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY || ""}>
-        <Map zoom={2} center={{ lat: 10, lng: 10 }} />
+        <Map zoom={2} center={{ lat: lati, lng: long }} />
       </Wrapper>
       <Switch
         label="I agree to sell my privacy"
