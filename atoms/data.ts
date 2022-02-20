@@ -4,15 +4,12 @@ export const client = createClient({
 });
 
 export const userQuery = `
-query MyQuery($email: String!) {
-    calgary_hacks_user(where: {email: {_eq: $email}}) {
-      email
-      image
-      reputation
-      name
-      uid
-    }
+query MyQuery {
+  calgary_hacks_location(where: {online: {_eq: true}}) {
+    online
+    location
   }
+}
 `;
 
 export const userMutation = `
