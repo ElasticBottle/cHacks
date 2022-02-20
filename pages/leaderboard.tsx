@@ -17,18 +17,20 @@ function Leaderboard() {
     data.calgary_hacks_user;
   return (
     <div className="p-3, flex flex-col px-4 pt-5">
-      <div className="pt-2 pb-4 text-2xl font-bold">Leaderboards</div>
-      {leaders.map((leader, index: number) => {
-        return (
-          <div key={index} className="flex justify-between ">
-            <div className="flex">
-              <Image src={leader.image} alt="user image" width={30} />
-              <div className="text-md ml-3 font-bold">{leader.name}</div>
+      <div className=" pt-2 pb-4 text-2xl font-bold">Leaderboards</div>
+      <div className="space-y-3 ">
+        {leaders.map((leader, index: number) => {
+          return (
+            <div key={index} className="flex justify-between ">
+              <div className="flex">
+                <Image src={leader.image} alt="user image" width={30} />
+                <div className="text-md ml-3 font-bold">{leader.name}</div>
+              </div>
+              <div>{leader.reputation} Pts</div>
             </div>
-            <div>{leader.reputation} Pts</div>
-          </div>
-        );
-      })}
+          );
+        })}
+      </div>
     </div>
   );
 }
