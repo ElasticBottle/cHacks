@@ -11,12 +11,5 @@ export default NextAuth({
     }),
   ],
   debug: process.env.NODE_ENV === "development",
-  callbacks: {
-    redirect({ url, baseUrl }: { url: string; baseUrl: string }) {
-      if (url.startsWith(baseUrl)) return url;
-      // Allows relative callback URLs
-      else if (url.startsWith("/")) return new URL(url, baseUrl).toString();
-      return baseUrl;
-    },
-  },
+
 });
