@@ -2,7 +2,15 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
 import styles from "../styles/Home.module.css";
-import {Map} from "../component/map"
+import Map from "../component/map"
+import { Wrapper, Status } from "@googlemaps/react-wrapper";
+import { ReactElement } from "react";
+
+const render = (status: Status): ReactElement => {
+  if (status === Status.FAILURE) return <div>Error</div>;
+  return <div>Loading</div> ;
+};
+
 
 const Home: NextPage = () => {
   return (
@@ -14,8 +22,10 @@ const Home: NextPage = () => {
       </Head>
 
       <main className={styles.main}>
-        <h1 className={styles.title}>Welcome to my fitness pal</h1>
-        <Map/>
+        
+        <Wrapper apiKey={"AIzaSyCCjVW2VkxkLyrc2Jp-7BxQMeO3wMDNWrQ"}>
+    <Map zoom ={2} center={{lat:10, lng: 10}}/>
+  </Wrapper>
       </main>
 
       <footer className={styles.footer}>
