@@ -25,7 +25,7 @@ const Layout = ({ children }: { children: React.ReactChild }) => {
 
   return (
     <div className="flex min-h-screen flex-col">
-      <div className="h-full grow">{children}</div>
+      <div className="flex h-full grow flex-col">{children}</div>
       <div className="h-15 flex flex-row justify-around p-2">
         {menuBarItems.map((menuItem) => {
           return (

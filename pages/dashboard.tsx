@@ -1,54 +1,75 @@
+import { Wrapper } from "@googlemaps/react-wrapper";
 import { GetServerSideProps } from "next";
-import { getSession } from "next-auth/react";
+import { getSession, useSession } from "next-auth/react";
 import React, { useEffect } from "react";
+import { useMutation, useQuery } from "urql";
+import { userMutation, userQuery } from "../atoms/data";
+import Map from "../component/map";
 import Layout from "../components/layout/Layout";
 import { NextPageWithLayout } from "../interface/next";
-import Map from "../component/map"
-import { Wrapper, Status } from "@googlemaps/react-wrapper";
-import { useQuery } from "urql";
-import { userQuery } from "../atoms/data";
-
-/*
-const Todos = () => {
-  const [result, reexecuteQuery] = useQuery({
-    query: userQuery,
-  });
-
-  const { data, fetching, error } = result;
-
-  if (fetching) console.log('Loading...</p>');
-  if (error) return console.log('Error');
-
-  return (
-    <ul>
-      {data.calgary_hacks_location.map(people => (
-        <li key={todo.id}>{todo.title}</li>
-      ))}
-    </ul>
-  );
-};*/
-function getMyLocation() {
-  const location = window.navigator && window.navigator.geolocation
-  if (location) {
-    location.getCurrentPosition((position) => {
-      console.log(position);
-    }, (error) => {
-      console.log('loc error');
-    })
-  }
-
-}
 
 function Dashboard() {
-  useEffect(() => {
-    getMyLocation();
-  }, [])
+  const { data: session } = useSession();
 
-  return <div className="relative w-full h-full">
-    <Wrapper apiKey={"AIzaSyCCjVW2VkxkLyrc2Jp-7BxQMeO3wMDNWrQ"}>
-      <Map zoom={2} center={{ lat: 10, lng: 10 }} />
-    </Wrapper>
-  </div>;
+  const [mutationResult, updateUser] = useMutation(userMutation);
+  const [{ data, fetching, error }, reexecuteQuery] = useQuery({
+    query: userQuery,
+    variables: { email: session?.user?.email || "" },
+    pause: !session || !session.user?.email,
+    requestPolicy: "network-only",
+  });
+
+  useEffect(() => {
+    if (
+      !fetching &&
+      !error &&
+      !data?.calgary_hacks_user?.length &&
+      session?.user?.email
+    ) {
+      updateUser({
+        objects: {
+          name: session?.user?.name || "",
+          email: session?.user?.email || "",
+          image: session?.user?.image || "",
+        },
+      });
+      reexecuteQuery();
+    }
+  }, [
+    data?.calgary_hacks_user?.length,
+    error,
+    fetching,
+    reexecuteQuery,
+    session?.user?.email,
+    session?.user?.image,
+    session?.user?.name,
+    updateUser,
+  ]);
+
+  useEffect(() => {
+    const location = window.navigator && window.navigator.geolocation;
+    if (location) {
+      location.getCurrentPosition(
+        (position) => {
+          return position;
+        },
+        (error) => {
+          console.log("loc error");
+        }
+      );
+    }
+  }, []);
+
+  if (fetching) return <p>Loading...</p>;
+  if (error) return <p>Oh no... {error.message}</p>;
+
+  return (
+    <div className="relative h-full w-full">
+      <Wrapper apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY || ""}>
+        <Map zoom={2} center={{ lat: 10, lng: 10 }} />
+      </Wrapper>
+    </div>
+  );
 }
 
 (Dashboard as NextPageWithLayout).getLayout = (page) => {
