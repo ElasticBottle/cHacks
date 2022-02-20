@@ -28,7 +28,13 @@ function Map({
     });
   });
 
-  return <div style={{ height: "80vh", width: "80vw" }} ref={ref} id="map" />;
+  return (
+    <div
+      style={{ height: "calc(100vh - 56px)", width: "100vw" }}
+      ref={ref}
+      id="map"
+    />
+  );
 }
 
 export default Map;
