@@ -10,8 +10,8 @@ import { NextPageWithLayout } from "../interface/next";
 
 function Dashboard() {
   const { data: session } = useSession();
-  const [lati, setlati] = useState(0)
-  const [long, setlong] = useState(0)
+  const [lati, setlati] = useState(0);
+  const [long, setlong] = useState(0);
   const [mutationResult, updateUser] = useMutation(userMutation);
   const [{ data, fetching, error }, reexecuteQuery] = useQuery({
     query: userQuery,
@@ -53,9 +53,8 @@ function Dashboard() {
     if (location) {
       location.getCurrentPosition(
         (position) => {
-          setlati(position.coords.latitude)
-          setlong(position.coords.longitude)
-          console.log(position)
+          setlati(position.coords.latitude);
+          setlong(position.coords.longitude);
           return position;
         },
         (error) => {
@@ -67,7 +66,6 @@ function Dashboard() {
 
   if (fetching) return <p>Loading...</p>;
   if (error) return <p>Oh no... {error.message}</p>;
-console.log(lati, long)
   return (
     <div className="relative h-full w-full">
       <Wrapper apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY || ""}>
