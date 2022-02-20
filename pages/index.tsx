@@ -1,35 +1,33 @@
-import type { NextPage } from "next";
-import Head from "next/head";
-import Image from "next/image";
-import styles from "../styles/Home.module.css";
+import { Button } from "@mantine/core";
+import { GetServerSideProps } from "next";
+import { getSession, signIn } from "next-auth/react";
+import { ROUTE_MAP } from "../interface/routes";
 
-const Home: NextPage = () => {
+const Home = ({ loggedIn }: { loggedIn: boolean }) => {
   return (
-    <div className={styles.container}>
-      <Head>
-        <title>Finding your fitness pal</title>
-        <meta name="description" content="The best social fitness experience" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      <main className={styles.main}>
-        <h1 className={styles.title}>Welcome to my fitness pal</h1>
-      </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{" "}
-          <span className={styles.logo}>
-            <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-          </span>
-        </a>
-      </footer>
+    <div className="flex min-h-screen flex-col items-center justify-center p-5">
+      <div className="text-4xl font-bold">Gun Game but it is fitness</div>
+      <Button
+        className="mt-4"
+        onClick={() => {
+          if (loggedIn) {
+            window.location.href = ROUTE_MAP;
+          }
+          signIn();
+        }}
+        variant="outline"
+      >
+        {loggedIn ? "Go to challenges" : "Get started"}
+      </Button>
     </div>
   );
 };
 
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const session = await getSession(context);
+  if (session) {
+    return { props: { loggedIn: true } };
+  }
+  return { props: { loggedIn: false } };
+};
 export default Home;
