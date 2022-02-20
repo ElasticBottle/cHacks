@@ -15,8 +15,6 @@ export default function App({
   return (
     <div className="min-h-screen">
       <Head>
-        <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet"></link>
-        <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
         <title>Gun game but its fitness</title>
         <meta name="description" content="The best social fitness experience" />
         <link

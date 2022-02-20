@@ -8,8 +8,6 @@ import { userMutation, userQuery } from "../atoms/data";
 import Map from "../component/map";
 import Layout from "../components/layout/Layout";
 import { NextPageWithLayout } from "../interface/next";
-import { Switch } from '@mantine/core';
-
 
 function Dashboard() {
   const { data: session } = useSession();
@@ -52,7 +50,6 @@ function Dashboard() {
 
   useEffect(() => {
     const location = window.navigator && window.navigator.geolocation;
-    console.log(1);
     if (location) {
       location.getCurrentPosition(
         (position) => {
@@ -70,14 +67,14 @@ function Dashboard() {
   if (fetching) return <p>Loading...</p>;
   if (error) return <p>Oh no... {error.message}</p>;
   return (
-    <div className="relative h-full w-full">
+    <div className="relative  h-full w-full">
       <Wrapper apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY || ""}>
         <Map zoom={2} center={{ lat: lati, lng: long }} />
       </Wrapper>
-      <Switch
-        label="I agree to sell my privacy"
-      />
-    </div >
+      <Button variant="outline" className="absolute left-2 bottom-6">
+        Start
+      </Button>
+    </div>
   );
 }
 
