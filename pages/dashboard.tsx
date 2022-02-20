@@ -61,6 +61,7 @@ function Dashboard() {
       prompt: data?.calgary_hacks_user[0].reputation,
     },
     pause: !data?.calgary_hacks_user[0].reputation,
+    requestPolicy: "network-only",
   });
   const userLocations = useMemo(() => {
     return [...(locations?.calgary_hacks_location || [])];
@@ -71,10 +72,11 @@ function Dashboard() {
   }, [lati, long]);
   const ping = async () => {
     await fetchLocations();
+    await reexecuteQuery();
     await getPrompt();
     setOpened(true);
   };
-
+  console.log("prompt", prompt);
   useEffect(() => {
     setActiveOpen(activeChallenge?.calgary_hacks_user.length > 0);
   }, [activeChallenge?.calgary_hacks_user.length]);
