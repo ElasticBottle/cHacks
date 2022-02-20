@@ -1,4 +1,5 @@
 import { Wrapper } from "@googlemaps/react-wrapper";
+import { Button } from "@mantine/core";
 import { GetServerSideProps } from "next";
 import { getSession, useSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
@@ -7,6 +8,8 @@ import { userMutation, userQuery } from "../atoms/data";
 import Map from "../component/map";
 import Layout from "../components/layout/Layout";
 import { NextPageWithLayout } from "../interface/next";
+import { Switch } from '@mantine/core';
+
 
 function Dashboard() {
   const { data: session } = useSession();
@@ -71,7 +74,10 @@ function Dashboard() {
       <Wrapper apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAP_API_KEY || ""}>
         <Map zoom={2} center={{ lat: lati, lng: long }} />
       </Wrapper>
-    </div>
+      <Switch
+        label="I agree to sell my privacy"
+      />
+    </div >
   );
 }
 
