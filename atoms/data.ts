@@ -22,3 +22,13 @@ mutation MyMutation($objects: [calgary_hacks_user_insert_input!] = {}) {
   }
   
 `;
+
+export const leaderBoardQuery = `
+query MyQuery3 {
+    calgary_hacks_user(order_by: {reputation: desc}, limit: 10) {
+      image
+      name
+      reputation
+    }
+  }
+`;
